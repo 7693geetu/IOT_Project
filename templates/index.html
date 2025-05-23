@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Home Light Control</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            font-size: 20px;
+            margin: 20px 0;
+        }
+
+        .light-image {
+            width: 150px;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+        }
+
+        #control-form {
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>💡 Smart Light Control Dashboard</h1>
+    <p>Current Light Status: <strong>{{ light_status }}</strong></p>
+
+    <!-- Display light bulb image based on light status -->
+    {% if light_status == 'ON' %}
+        <img class="light-image" src="/static/app.png" alt="Light ON">
+    {% else %}
+        <img class="light-image" src="/static/OF.png" alt="Light OFF">
+    {% endif %}
+
+    <form id="control-form">
+        <button type="button" onclick="toggleLight('ON')">Turn ON</button>
+        <button type="button" onclick="toggleLight('OFF')">Turn OFF</button>
+    </form>
+
+    <script>
+        function toggleLight(action) {
+            fetch('/control', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ action: action })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            });
+        }
+    </script>
+</body>
+</html>
